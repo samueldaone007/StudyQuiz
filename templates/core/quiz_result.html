@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Result - {{ quiz.title }} - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'my_results' %}">My Results</a></li>
+                    <li class="breadcrumb-item active">Result</li>
+                </ol>
+            </nav>
+            
+            <!-- Score Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-5 text-center">
+                    <div class="score-circle mx-auto mb-4 {% if percentage >= 70 %}bg-success{% elif percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}">
+                        <div class="score-inner">
+                            <span class="score-percentage">{{ percentage }}%</span>
+                            <span class="score-fraction">{{ attempt.score }}/{{ attempt.total_questions }}</span>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-2">
+                        {% if percentage >= 80 %}Excellent! 🎉
+                        {% elif percentage >= 70 %}Great Job! 👏
+                        {% elif percentage >= 50 %}Good Effort! 💪
+                        {% else %}Keep Practicing! 📚
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted">You answered {{ attempt.score }} out of {{ attempt.total_questions }} questions correctly</p>
+                    
+                    <div class="d-flex gap-2 justify-content-center mt-4">
+                        <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-primary">
+                            <i class="fas fa-redo me-2"></i>Retake Quiz
+                        </a>
+                        <a href="{% url 'my_quizzes' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>All Quizzes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Results -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-list-check text-primary me-2"></i>Detailed Results</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="accordion" id="resultsAccordion">
+                        {% for result in results %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}">
+                                    <span class="me-3">
+                                        {% if result.is_correct %}
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                        {% endif %}
+                                    </span>
+                                    <span class="fw-bold">Question {{ forloop.counter }}</span>
+                                </button>
+                            </h2>
+                            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#resultsAccordion">
+                                <div class="accordion-body">
+                                    <p class="fw-bold">{{ result.question.question_text }}</p>
+                                    <div class="mb-3">
+                                        <span class="text-muted">Your Answer:</span>
+                                        <span class="{% if result.is_correct %}text-success{% else %}text-danger{% endif %} fw-bold">
+                                            {{ result.user_answer|default:"Not answered" }}
+                                        </span>
+                                    </div>
+                                    {% if not result.is_correct %}
+                                    <div class="mb-3">
+                                        <span class="text-muted">Correct Answer:</span>
+                                        <span class="text-success fw-bold">{{ result.question.correct_answer }}</span>
+                                    </div>
+                                    {% endif %}
+                                    {% if result.question.explanation %}
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>{{ result.question.explanation }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.score-inner {
+    text-align: center;
+}
+.score-percentage {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1;
+}
+.score-fraction {
+    display: block;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+</style>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}StudyQuiz - Personalized Study & Quiz App{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Learn Smarter with <span class="text-primary">AI-Powered</span> Study Tools</h1>
+                <p class="lead text-muted mb-4">Upload your study materials, get instant summaries, and generate personalized quizzes to test your knowledge. Study at your own pace, anywhere, anytime.</p>
+                <div class="d-flex gap-3">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                    <a href="{% url 'upload_material' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-upload me-2"></i>Upload Material
+                    </a>
+                    {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Get Started Free
+                    </a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <div class="floating-cards">
+                        <div class="card feature-card bg-primary text-white">
+                            <div class="card-body">
+                                <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                <h5>Upload Notes</h5>
+                            </div>
+                        </div>
+                        <div class="card feature-card bg-success text-white">
+                            <div class="card-body">
+                                <i class="fas fa-brain fa-2x mb-2"></i>
+                                <h5>AI Summary</h5>
+                            </div>
+                        </div>
+                        <div class="card feature-card bg-warning text-dark">
+                            <div class="card-body">
+                                <i class="fas fa-question-circle fa-2x mb-2"></i>
+                                <h5>Take Quiz</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="display-5 fw-bold text-primary">{{ total_users|default:"100+" }}</h3>
+                    <p class="text-muted">Active Students</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="display-5 fw-bold text-primary">{{ total_materials|default:"500+" }}</h3>
+                    <p class="text-muted">Study Materials</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="display-5 fw-bold text-primary">{{ total_quizzes|default:"1000+" }}</h3>
+                    <p class="text-muted">Quizzes Generated</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+            <p class="text-muted">Three simple steps to enhance your learning experience</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-box h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary text-white rounded-circle mb-3">
+                            <i class="fas fa-upload fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">1. Upload Your Notes</h5>
+                        <p class="card-text text-muted">Upload your study materials in various formats or type them directly into the system.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-box h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success text-white rounded-circle mb-3">
+                            <i class="fas fa-magic fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">2. Get AI Summary</h5>
+                        <p class="card-text text-muted">Our AI automatically summarizes your notes and extracts key concepts for efficient studying.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-box h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-warning text-dark rounded-circle mb-3">
+                            <i class="fas fa-clipboard-check fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">3. Take Personalized Quiz</h5>
+                        <p class="card-text text-muted">Generate quizzes based on your materials and test your knowledge with instant feedback.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Why Choose StudyQuiz?</h2>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="benefit-icon text-primary me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Personalized Learning</h6>
+                        <p class="text-muted mb-0">Study at your own pace with content tailored to your materials.</p>
+                    </div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="benefit-icon text-primary me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">AI-Powered Summarization</h6>
+                        <p class="text-muted mb-0">Save time with intelligent text summarization and key concept extraction.</p>
+                    </div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="benefit-icon text-primary me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Automated Quiz Generation</h6>
+                        <p class="text-muted mb-0">Create practice quizzes instantly from your study materials.</p>
+                    </div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="benefit-icon text-primary me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Track Your Progress</h6>
+                        <p class="text-muted mb-0">Monitor your learning with detailed quiz results and statistics.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="benefits-image text-center">
+                    <div class="card shadow-lg">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="progress flex-grow-1 me-3" style="height: 20px;">
+                                    <div class="progress-bar bg-success" style="width: 85%">85%</div>
+                                </div>
+                                <i class="fas fa-trophy text-warning fa-lg"></i>
+                            </div>
+                            <p class="text-muted mb-0"><i class="fas fa-chart-line text-success me-2"></i>Your learning progress is improving!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="card bg-primary text-white border-0">
+            <div class="card-body p-5 text-center">
+                <h2 class="fw-bold mb-3">Ready to Start Learning Smarter?</h2>
+                <p class="lead mb-4">Join thousands of students who are already using StudyQuiz to improve their learning experience.</p>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg text-primary fw-bold">
+                    <i class="fas fa-rocket me-2"></i>Get Started Now
+                </a>
+                {% else %}
+                <a href="{% url 'upload_material' %}" class="btn btn-light btn-lg text-primary fw-bold">
+                    <i class="fas fa-upload me-2"></i>Upload New Material
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

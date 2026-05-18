@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Material - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Upload Material</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="fw-bold mb-0"><i class="fas fa-upload text-primary me-2"></i>Upload Study Material</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Title <span class="text-danger">*</span></label>
+                            {{ form.title }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_content" class="form-label">Study Content</label>
+                            {{ form.content }}
+                            <small class="text-muted">Enter your study notes directly or upload a file below.</small>
+                        </div>
+                        
+                        <div class="text-center my-3">
+                            <span class="text-muted">— OR —</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="id_file_upload" class="form-label">Upload File</label>
+                            {{ form.file_upload }}
+                            <small class="text-muted">Supported formats: .txt, .pdf, .docx, .pptx, .ppt (Max: 20MB)</small>
+                        </div>
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload me-2"></i>Upload Material
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tips Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold"><i class="fas fa-lightbulb text-warning me-2"></i>Tips for Best Results</h6>
+                    <ul class="text-muted mb-0">
+                        <li>Use clear, well-structured notes for better summarization</li>
+                        <li>Include key terms and definitions in your content</li>
+                        <li>Avoid uploading copyrighted materials</li>
+                        <li>Maximum file size: 20MB</li>
+                        <li>Supported documents: Word, PDF, PowerPoint, and text files</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

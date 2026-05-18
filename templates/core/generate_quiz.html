@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Quiz - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'my_materials' %}">My Materials</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'view_material' material.id %}">{{ material.title }}</a></li>
+                    <li class="breadcrumb-item active">Generate Quiz</li>
+                </ol>
+            </nav>
+            
+            <!-- AI Status Banner -->
+            {% if has_ai_api %}
+            <div class="alert alert-success d-flex align-items-center mb-3">
+                <i class="fas fa-robot fa-lg me-3"></i>
+                <div>
+                    <strong>AI-Powered Question Generation Active!</strong><br>
+                    <small>Using {{ ai_provider }} to generate human-like questions.</small>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info d-flex align-items-center mb-3">
+                <i class="fas fa-brain fa-lg me-3"></i>
+                <div>
+                    <strong>Smart Question Generation</strong><br>
+                    <small>Using local AI. Add an API key to .env for even smarter questions.</small>
+                    <a href="{% url 'about' %}#api-setup" class="alert-link">Learn more</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="fw-bold mb-0"><i class="fas fa-magic text-primary me-2"></i>Generate Quiz</h4>
+                    <p class="text-muted mb-0">Configure your quiz settings for "{{ material.title }}"</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_num_questions" class="form-label fw-bold">Number of Questions</label>
+                            {{ form.num_questions }}
+                            <small class="text-muted">Choose between 1-20 questions</small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Question Types</label>
+                            <div class="question-types">
+                                {% for choice in form.question_types %}
+                                <div class="form-check">
+                                    {{ choice.tag }}
+                                    <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                        {% if choice.data.value == 'MCQ' %}
+                                            <i class="fas fa-list-ul text-primary me-2"></i>Multiple Choice
+                                        {% elif choice.data.value == 'TF' %}
+                                            <i class="fas fa-check-double text-success me-2"></i>True/False
+                                        {% else %}
+                                            <i class="fas fa-edit text-warning me-2"></i>Short Answer
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="id_difficulty" class="form-label fw-bold">Difficulty Level</label>
+                            {{ form.difficulty }}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-magic me-2"></i>Generate Quiz
+                            </button>
+                            <a href="{% url 'view_material' material.id %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Info Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold"><i class="fas fa-info-circle text-info me-2"></i>How Quiz Generation Works</h6>
+                    <ul class="text-muted mb-0">
+                        <li><strong>AI Analysis:</strong> Our system uses AI to understand your study material</li>
+                        <li><strong>Smart Questions:</strong> Questions are generated to test real understanding</li>
+                        <li><strong>Context-Aware:</strong> Options are related to the correct answer's category</li>
+                        <li><strong>Multiple Types:</strong> Mix MCQ, True/False, and Short Answer questions</li>
+                    </ul>
+                    
+                    <hr class="my-3">
+                    
+                    <h6 class="fw-bold"><i class="fas fa-key text-warning me-2"></i>Upgrade Question Quality</h6>
+                    <p class="text-muted small mb-2">Add an AI API key to your .env file for even better questions:</p>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-success">OpenAI GPT-3.5</span>
+                        <span class="badge bg-primary">Hugging Face</span>
+                        <span class="badge bg-secondary">Local AI (Default)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

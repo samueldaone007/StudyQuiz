@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}My Results - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="fw-bold mb-4"><i class="fas fa-chart-bar text-info me-2"></i>My Quiz Results</h3>
+    
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stat-icon bg-white text-primary rounded-circle me-3">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1 opacity-75">Total Attempts</h6>
+                        <h4 class="fw-bold mb-0">{{ total_attempts }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stat-icon bg-white text-success rounded-circle me-3">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1 opacity-75">Overall Score</h6>
+                        <h4 class="fw-bold mb-0">{{ overall_percentage }}%</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card bg-info text-white">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stat-icon bg-white text-info rounded-circle me-3">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1 opacity-75">Average Score</h6>
+                        <h4 class="fw-bold mb-0">{{ avg_score }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Quiz History</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if attempts %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Quiz</th>
+                            <th>Material</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in attempts %}
+                        <tr>
+                            <td>{{ attempt.quiz.title }}</td>
+                            <td>{{ attempt.quiz.study_material.title }}</td>
+                            <td>{{ attempt.score }}/{{ attempt.total_questions }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 me-2" style="height: 8px; width: 80px;">
+                                        <div class="progress-bar 
+                                            {% if attempt.get_percentage >= 70 %}bg-success
+                                            {% elif attempt.get_percentage >= 50 %}bg-warning
+                                            {% else %}bg-danger{% endif %}" 
+                                            style="width: {{ attempt.get_percentage }}%"></div>
+                                    </div>
+                                    <span class="small">{{ attempt.get_percentage }}%</span>
+                                </div>
+                            </td>
+                            <td>{{ attempt.completed_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'quiz_result' attempt.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-trophy fa-4x text-muted mb-4"></i>
+                <h5 class="fw-bold">No Results Yet</h5>
+                <p class="text-muted">Take quizzes to see your results here!</p>
+                <a href="{% url 'my_quizzes' %}" class="btn btn-primary">
+                    <i class="fas fa-question-circle me-2"></i>View Quizzes
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

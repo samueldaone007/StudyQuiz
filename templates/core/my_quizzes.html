@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}My Quizzes - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0"><i class="fas fa-question-circle text-success me-2"></i>My Quizzes</h3>
+        <a href="{% url 'my_materials' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Generate New Quiz
+        </a>
+    </div>
+    
+    {% if quizzes %}
+    <div class="row g-4">
+        {% for quiz in quizzes %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card quiz-card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="quiz-icon bg-success text-white rounded-circle">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'take_quiz' quiz.id %}">
+                                        <i class="fas fa-play me-2"></i>Take Quiz
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{% url 'delete_quiz' quiz.id %}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h5 class="card-title fw-bold">{{ quiz.title }}</h5>
+                    <p class="card-text text-muted small mb-2">
+                        <i class="fas fa-book me-1"></i>{{ quiz.study_material.title }}
+                    </p>
+                    <p class="card-text text-muted small">
+                        <i class="fas fa-list-ol me-1"></i>{{ quiz.get_question_count }} questions | 
+                        <i class="fas fa-calendar ms-1 me-1"></i>{{ quiz.date_created|date:"M d, Y" }}
+                    </p>
+                    <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-success w-100 mt-3">
+                        <i class="fas fa-play me-2"></i>Take Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-clipboard-list fa-4x text-muted mb-4"></i>
+            <h5 class="fw-bold">No Quizzes Yet</h5>
+            <p class="text-muted">Generate quizzes from your study materials!</p>
+            <a href="{% url 'my_materials' %}" class="btn btn-primary">
+                <i class="fas fa-book me-2"></i>View Materials
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

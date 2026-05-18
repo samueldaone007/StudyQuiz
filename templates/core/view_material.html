@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ material.title }} - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my_materials' %}">My Materials</a></li>
+            <li class="breadcrumb-item active">{{ material.title }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row g-4">
+        <!-- Material Content -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-file-alt text-primary me-2"></i>{{ material.title }}</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'generate_quiz' material.id %}">
+                                    <i class="fas fa-question-circle me-2"></i>Generate Quiz
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'delete_material' material.id %}">
+                                    <i class="fas fa-trash me-2"></i>Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="content-section mb-4">
+                        <h6 class="fw-bold text-muted mb-2">Original Content</h6>
+                        <div class="content-box bg-light p-3 rounded">
+                            <pre class="mb-0" style="white-space: pre-wrap;">{{ material.get_content }}</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-muted small">
+                    <i class="fas fa-calendar me-1"></i>Uploaded on {{ material.upload_date|date:"F d, Y" }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Summary Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-magic text-success me-2"></i>AI Summary</h5>
+                    {% if summary %}
+                    <span class="badge bg-info">{{ summary_word_count }} words</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if summary %}
+                    <div class="summary-content">
+                        <p>{{ summary.summarized_text }}</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary w-100 mt-2" onclick="regenerateSummary()">
+                        <i class="fas fa-sync-alt me-2"></i>Regenerate
+                    </button>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">Generating summary...</p>
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Key Concepts Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-tags text-warning me-2"></i>Key Concepts</h5>
+                </div>
+                <div class="card-body">
+                    {% if key_concepts %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for concept in key_concepts %}
+                        <span class="badge bg-primary">{{ concept }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No key concepts extracted yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Actions Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-bolt text-info me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'generate_quiz' material.id %}" class="btn btn-primary w-100 mb-2">
+                        <i class="fas fa-question-circle me-2"></i>Generate Quiz
+                    </a>
+                    <a href="{% url 'my_materials' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Materials
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function regenerateSummary() {
+    fetch('/api/materials/{{ material.id }}/regenerate-summary/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error regenerating summary');
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

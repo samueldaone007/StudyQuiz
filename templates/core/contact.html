@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - StudyQuiz{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold">Contact Us</h1>
+                <p class="text-muted">Have questions or feedback? We'd love to hear from you!</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Get in Touch</h5>
+                            
+                            <div class="contact-info mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="contact-icon bg-primary text-white rounded-circle me-3">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Email</h6>
+                                        <p class="text-muted mb-0 small">support@studyquiz.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-info mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="contact-icon bg-success text-white rounded-circle me-3">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Phone</h6>
+                                        <p class="text-muted mb-0 small">+234 123 456 7890</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-info">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="contact-icon bg-warning text-dark rounded-circle me-3">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Address</h6>
+                                        <p class="text-muted mb-0 small">Bingham University, Karu, Nigeria</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <h6 class="fw-bold mb-3">Follow Us</h6>
+                            <div class="social-links">
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-facebook"></i></a>
+                                <a href="#" class="btn btn-outline-info btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="btn btn-outline-dark btn-sm"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-7">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Send a Message</h5>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="id_name" class="form-label">Your Name</label>
+                                    {{ form.name }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_email" class="form-label">Email Address</label>
+                                    {{ form.email }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_subject" class="form-label">Subject</label>
+                                    {{ form.subject }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_message" class="form-label">Message</label>
+                                    {{ form.message }}
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
